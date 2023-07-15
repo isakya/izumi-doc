@@ -54,7 +54,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>com.izumi.wiki.WikiApplication</mainClass>
+                    <mainClass>com.izumi.wiki.config.WikiApplication</mainClass>
                     <skip>true</skip>
                 </configuration>
                 <executions>
