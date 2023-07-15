@@ -85,7 +85,7 @@ const ebooks = ref()
 
 onMounted(() => {
   console.log("onMounted")
-  axios.get("http://localhost:8880/ebook/list?name=Spring").then(res => {
+  axios.get("http://localhost:8880/ebook/list").then(res => {
     const data = res.data;
     ebooks.value = data.content
     console.log(res)
@@ -94,7 +94,11 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.site-layout-background {
-  background: #fff;
+.ant-avatar {
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  border-radius: 8%;
+  margin: 5px 0;
 }
 </style>
