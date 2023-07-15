@@ -2,8 +2,6 @@
   <a-layout style="padding: 24px 0; background: #fff; margin-top: 50px">
     <a-layout-sider width="200" style="background: #fff">
       <a-menu
-          v-model:selectedKeys="selectedKeys2"
-          v-model:openKeys="openKeys"
           mode="inline"
           style="height: 100%"
       >
@@ -51,14 +49,13 @@
   </a-layout>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
+import axios from 'axios'
 
-export default defineComponent({
-  name: 'HomeView',
-  components: {
-  },
-});
+console.log("setup")
+axios.get("http://localhost:8880/ebook/list?name=Spring").then(res => {
+  console.log(res)
+})
 </script>
 
 <style scoped>
