@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-@ComponentScan({"com.izumi", "com.test"}) // 扫描多个包
+// @ComponentScan({"com.izumi", "com.test"}) // 扫描多个包
 @ComponentScan("com.izumi")
 @SpringBootApplication
 public class WikiApplication {
