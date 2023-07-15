@@ -8,7 +8,7 @@
         <a-sub-menu key="sub1">
           <template #title>
                 <span>
-                  <user-outlined />
+                  <user-outlined/>
                   subnav
                 </span>
           </template>
@@ -20,7 +20,7 @@
         <a-sub-menu key="sub2">
           <template #title>
                 <span>
-                  <laptop-outlined />
+                  <laptop-outlined/>
                   subnav 2
                 </span>
           </template>
@@ -32,7 +32,7 @@
         <a-sub-menu key="sub3">
           <template #title>
                 <span>
-                  <notification-outlined />
+                  <notification-outlined/>
                   subnav 3
                 </span>
           </template>
@@ -44,17 +44,33 @@
       </a-menu>
     </a-layout-sider>
     <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
-      Content
+      <pre>
+{{ebooks1}}
+{{books}}
+{{ebooks}}
+      </pre>
     </a-layout-content>
   </a-layout>
 </template>
 
 <script lang="ts" setup>
 import axios from 'axios'
+import {onMounted, ref, reactive, toRef} from "vue";
 
 console.log("setup")
-axios.get("http://localhost:8880/ebook/list?name=Spring").then(res => {
-  console.log(res)
+
+const ebooks = ref()
+const ebooks1 = reactive({books: []})
+const books = toRef(ebooks1, "books") // 转化为响应式数据
+
+onMounted(() => {
+  console.log("onMounted")
+  axios.get("http://localhost:8880/ebook/list?name=Spring").then(res => {
+    const data = res.data;
+    ebooks1.books = data.content
+    ebooks.value = data.content
+    console.log(res)
+  })
 })
 </script>
 
