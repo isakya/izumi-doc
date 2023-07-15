@@ -79,12 +79,10 @@ const actions: Record<string, any>[] = [
   {icon: LikeOutlined, text: '156'},
   {icon: MessageOutlined, text: '2'},
 ];
-console.log("setup")
 
 const ebooks = ref()
 
 onMounted(() => {
-  console.log("onMounted")
   axios.get("/ebook/list").then(res => {
     const data = res.data;
     ebooks.value = data.content
