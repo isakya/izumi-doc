@@ -44,30 +44,49 @@
       </a-menu>
     </a-layout-sider>
     <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
-      <pre>
-{{ebooks1}}
-{{books}}
-{{ebooks}}
-      </pre>
+      <a-list item-layout="vertical" size="large" :data-source="ebooks" :grid="{gutter: 20, column: 3}">
+        <template #renderItem="{ item }">
+          <a-list-item key="item.name">
+            <template #actions>
+          <span v-for="{ icon, text } in actions" :key="icon">
+            <component :is="icon" style="margin-right: 8px"/>
+            {{ text }}
+          </span>
+            </template>
+            <a-list-item-meta :description="item.description">
+              <template #title>
+                <a :href="item.href">{{ item.name }}</a>
+              </template>
+              <template #avatar>
+                <a-avatar :src="item.cover"/>
+              </template>
+            </a-list-item-meta>
+          </a-list-item>
+        </template>
+      </a-list>
     </a-layout-content>
   </a-layout>
 </template>
 
 <script lang="ts" setup>
 import axios from 'axios'
-import {onMounted, ref, reactive, toRef} from "vue";
+import {StarOutlined, LikeOutlined, MessageOutlined} from '@ant-design/icons-vue';
+import {onMounted, ref} from "vue";
 
+
+const actions: Record<string, any>[] = [
+  {icon: StarOutlined, text: '156'},
+  {icon: LikeOutlined, text: '156'},
+  {icon: MessageOutlined, text: '2'},
+];
 console.log("setup")
 
 const ebooks = ref()
-const ebooks1 = reactive({books: []})
-const books = toRef(ebooks1, "books") // 转化为响应式数据
 
 onMounted(() => {
   console.log("onMounted")
   axios.get("http://localhost:8880/ebook/list?name=Spring").then(res => {
     const data = res.data;
-    ebooks1.books = data.content
     ebooks.value = data.content
     console.log(res)
   })
