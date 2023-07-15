@@ -85,7 +85,7 @@ const ebooks = ref()
 
 onMounted(() => {
   console.log("onMounted")
-  axios.get("http://localhost:8880/ebook/list").then(res => {
+  axios.get(process.env.VUE_APP_SERVER + "/ebook/list").then(res => {
     const data = res.data;
     ebooks.value = data.content
     console.log(res)
