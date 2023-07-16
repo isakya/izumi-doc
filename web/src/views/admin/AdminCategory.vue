@@ -17,7 +17,7 @@
       </p>
       <a-table
           :columns="columns"
-          :data-source="categorys"
+          :data-source="level1"
           :row-key="record => record.id"
           :loading="loading"
           :pagination="false"
@@ -68,7 +68,8 @@ import {message} from 'ant-design-vue'
 import {Tool} from "@/util/tool";
 
 const categorys = ref()
-
+// 一级分类
+const level1 = ref()
 const loading = ref(false)
 // 表单
 const category = ref()
@@ -144,6 +145,11 @@ const handleQuery = () => {
     const data = response.data
     if (data.success) {
       categorys.value = data.content
+      console.log('原始数组: ', categorys.value)
+
+      level1.value = []
+      level1.value = Tool.array2Tree(categorys.value, 0)
+      console.log('树形机构: ', level1.value)
     } else {
       message.error(data.message)
     }
