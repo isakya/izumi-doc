@@ -30,6 +30,9 @@
           <template v-if="column.key === 'cover'">
             <img :src="record.cover" alt="avatar"/>
           </template>
+          <template v-if="column.key === 'category'">
+            <span>{{ getCategoryName(record.category1Id) }} / {{ getCategoryName(record.category2Id) }}</span>
+          </template>
           <template v-if="column.key === 'action'">
             <a-space size="small">
               <a-button type="primary" @click="edit(record)">
@@ -87,6 +90,8 @@ const pagination = ref({
 // 加载分类
 // 数组 [100, 101] 对应 前端开发/Vue
 const categoryIds = ref()
+// 普通变量
+let categorys: any
 const loading = ref(false)
 // 表单
 const ebook = ref()
@@ -154,14 +159,9 @@ const columns = [
     key: 'name'
   },
   {
-    title: '分类一',
-    dataIndex: 'category1Id',
-    key: 'category1Id',
-  },
-  {
-    title: '分类二',
-    dataIndex: 'category2Id',
-    key: 'category2Id'
+    title: '分类',
+    dataIndex: 'category',
+    key: 'category'
   },
   {
     title: '文档数',
@@ -226,7 +226,7 @@ const handleQueryCategory = () => {
     loading.value = false
     const data = response.data
     if (data.success) {
-      const categorys = data.content
+      categorys = data.content
       console.log('原始数组: ', categorys)
       level1.value = []
       level1.value = Tool.array2Tree(categorys, 0)
@@ -235,6 +235,15 @@ const handleQueryCategory = () => {
       message.error(data.message)
     }
   })
+}
+const getCategoryName = (categoryId: number) => {
+  let result = ""
+  categorys.forEach((item: any) => {
+    if (item.id === categoryId) {
+      result = item.name
+    }
+  })
+  return result
 }
 onMounted(() => {
   handleQueryCategory()
