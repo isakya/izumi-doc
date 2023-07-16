@@ -15,7 +15,7 @@
           </template>
           <template v-if="column.key === 'action'">
             <a-space size="small">
-              <a-button type="primary">
+              <a-button type="primary" @click="edit">
                 编辑
               </a-button>
               <a-button type="danger">
@@ -27,6 +27,9 @@
       </a-table>
     </a-layout-content>
   </a-layout>
+  <a-modal v-model:open="modalVisible" :confirm-loading="modalLoading" title="电子书表单" @ok="handleModalOk">
+    <p>test</p>
+  </a-modal>
 </template>
 <script lang="ts" setup>
 import {onMounted, ref} from 'vue'
@@ -40,6 +43,20 @@ const pagination = ref({
   total: 0
 })
 const loading = ref(false)
+
+
+const modalVisible = ref<boolean>(false)
+const modalLoading = ref<boolean>(false)
+const edit = () => {
+  modalVisible.value = true
+};
+const handleModalOk = (e: MouseEvent) => {
+  modalLoading.value = true
+  setTimeout(() => {
+    modalVisible.value = false
+    modalLoading.value = false
+  }, 2000)
+};
 
 const columns = [
   {
