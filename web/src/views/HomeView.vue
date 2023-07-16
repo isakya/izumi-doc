@@ -4,29 +4,41 @@
       <a-menu
           mode="inline"
           style="height: 100%"
+          @click="handleClick"
       >
         <a-menu-item key="welcome">
-          <route-link :to="'/'">
-            <HomeOutlined />
-            <span>欢迎</span>
-          </route-link>
+          <HomeOutlined/>
+          <span>欢迎</span>
         </a-menu-item>
         <a-sub-menu v-for="item in level1" :key="item.id">
           <template v-slot:title>
-            <branches-outlined />
+            <branches-outlined/>
             <span>
-                {{item.name}}
-              </span>
+                {{ item.name }}
+            </span>
           </template>
           <a-menu-item v-for="child in item.children" :key="child.id">
-<!--            <branches-outlined />-->
-            <span>{{child.name}}</span>
+            <!--            <branches-outlined />-->
+            <span>{{ child.name }}</span>
           </a-menu-item>
         </a-sub-menu>
       </a-menu>
     </a-layout-sider>
     <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
-      <a-list item-layout="vertical" size="large" :data-source="ebooks" :grid="{gutter: 20, column: 3}">
+      <div class="welcome" v-show="isShowWelcome">
+        <a-space :size="220">
+          <div>
+            <h1>
+              欢迎使用IZUMI书库
+            </h1>
+            <p>(*￣︶￣)</p>
+          </div>
+
+          <img src="/image/home.jpg" alt="IZUMI">
+        </a-space>
+      </div>
+      <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :data-source="ebooks"
+              :grid="{gutter: 20, column: 3}">
         <template #renderItem="{ item }">
           <a-list-item key="item.name">
             <template #actions>
@@ -75,6 +87,11 @@ const handleQueryCategory = () => {
   })
 }
 
+const isShowWelcome = ref(true)
+// 菜单点击
+const handleClick = (value: any) => {
+  isShowWelcome.value = value.key === 'welcome';
+}
 const actions: Record<string, any>[] = [
   {icon: StarOutlined, text: '156'},
   {icon: LikeOutlined, text: '156'},
@@ -108,5 +125,18 @@ onMounted(() => {
   line-height: 50px;
   border-radius: 8%;
   margin: 5px 0;
+}
+
+.welcome {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.welcome h1,p {
+  font-size: 30px;
+  color: #ebab4b;
+}
+.welcome h1 {
+  font-style: italic;
 }
 </style>
