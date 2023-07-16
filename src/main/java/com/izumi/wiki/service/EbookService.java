@@ -5,8 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.izumi.wiki.domain.Ebook;
 import com.izumi.wiki.domain.EbookExample;
 import com.izumi.wiki.mapper.EbookMapper;
-import com.izumi.wiki.req.EbookReq;
-import com.izumi.wiki.resp.EbookResp;
+import com.izumi.wiki.req.EbookQueryReq;
+import com.izumi.wiki.req.EbookSaveReq;
+import com.izumi.wiki.resp.EbookQueryResp;
 import com.izumi.wiki.resp.PageResp;
 import com.izumi.wiki.util.CopyUtil;
 import org.slf4j.Logger;
@@ -24,26 +25,42 @@ public class EbookService {
     @Resource
     private EbookMapper ebookMapper;
 
-    public PageResp<EbookResp> list(EbookReq req) {
+    public PageResp<EbookQueryResp> list(EbookQueryReq req) {
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
 
-        if(!ObjectUtils.isEmpty(req.getName())) {
+        if (!ObjectUtils.isEmpty(req.getName())) {
             criteria.andNameLike("%" + req.getName() + "%");
         }
         PageHelper.startPage(req.getPage(), req.getSize()); // 只对第一次遇到的sql查询有效
         List<Ebook> ebookList = ebookMapper.selectByExample(ebookExample);
 
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebookList);
-        LOG.info("总行数：{}",pageInfo.getTotal());
-        LOG.info("总页数：{}",pageInfo.getPages());
+        LOG.info("总行数：{}", pageInfo.getTotal());
+        LOG.info("总页数：{}", pageInfo.getPages());
 
 
         // 列表复制
-        List<EbookResp> list = CopyUtil.copyList(ebookList, EbookResp.class);
-        PageResp<EbookResp> pageResp = new PageResp<>();
+        List<EbookQueryResp> list = CopyUtil.copyList(ebookList, EbookQueryResp.class);
+        PageResp<EbookQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(list);
         return pageResp;
+    }
+
+    /**
+     * 保存
+     *
+     * @param req
+     */
+    public void save(EbookSaveReq req) {
+        Ebook ebook = CopyUtil.copy(req, Ebook.class);
+        if (ObjectUtils.isEmpty(req.getId())) {
+            // 新增
+            ebookMapper.insert(ebook);
+        } else {
+            // 更新
+            ebookMapper.updateByPrimaryKey(ebook);
+        }
     }
 }
