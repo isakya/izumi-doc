@@ -83,9 +83,14 @@ const actions: Record<string, any>[] = [
 const ebooks = ref()
 
 onMounted(() => {
-  axios.get("/ebook/list").then(res => {
-    const data = res.data;
-    ebooks.value = data.content
+  axios.get("/ebook/list", {
+    params: {
+      page: 1,
+      size: 1000
+    }
+  }).then(res => {
+    const data = res.data
+    ebooks.value = data.content.list
     console.log(res)
   })
 })
