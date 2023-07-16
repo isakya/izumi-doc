@@ -2,13 +2,10 @@
   <a-layout style="padding: 24px 0; background: #fff; margin-top: 50px">
     <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
       <p>
-        <a-form layout="inline" :model="param">
+        <a-form layout="inline">
           <a-form-item>
-            <a-input v-model:value="param.name" placeholder="名称"></a-input>
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})">
-              查询
+            <a-button type="primary" @click="handleQuery()">
+              刷新
             </a-button>
           </a-form-item>
           <a-form-item>
@@ -22,9 +19,8 @@
           :columns="columns"
           :data-source="categorys"
           :row-key="record => record.id"
-          :pagination="pagination"
           :loading="loading"
-          @change="handleTableChange"
+          :pagination="false"
       >
         <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'cover'">
@@ -71,15 +67,8 @@ import axios from 'axios'
 import {message} from 'ant-design-vue'
 import {Tool} from "@/util/tool";
 
-const param = ref()
-// 这里必须设置value 为一个空对象
-param.value = {}
 const categorys = ref()
-const pagination = ref({
-  current: 1,
-  pageSize: 10,
-  total: 0
-})
+
 const loading = ref(false)
 // 表单
 const category = ref()
@@ -101,10 +90,7 @@ const del = (id: number) => {
     const data = response.data
     if (data.success) {
       // 重新加载列表
-      handleQuery({
-        page: pagination.value.current,
-        size: pagination.value.pageSize
-      })
+      handleQuery()
     }
   })
 }
@@ -116,10 +102,7 @@ const handleModalOk = (e: MouseEvent) => {
     if (data.success) {
       modalVisible.value = false
       // 重新加载列表
-      handleQuery({
-        page: pagination.value.current,
-        size: pagination.value.pageSize
-      })
+      handleQuery()
     } else {
       message.error(data.message)
     }
@@ -152,41 +135,22 @@ const columns = [
 /**
  * 数据查询
  */
-const handleQuery = (params: any) => {
+const handleQuery = () => {
   loading.value = true
   // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑
   categorys.value = []
-  axios.get("/category/list", {
-    params: {
-      page: params.page,
-      size: params.size,
-      name: param.value?.name
-    }
-  }).then((response) => {
+  axios.get("/category/all").then((response) => {
     loading.value = false
     const data = response.data
     if (data.success) {
-      categorys.value = data.content.list
-      pagination.value.current = params.page
-      pagination.value.total = data.content.total
+      categorys.value = data.content
     } else {
       message.error(data.message)
     }
   })
 }
-// 表格点击页码时触发
-const handleTableChange = (pagination: any) => {
-  console.log('看看自带的分页参数都有啥: ' + pagination)
-  handleQuery({
-    page: pagination.current,
-    size: pagination.pageSize
-  })
-}
 onMounted(() => {
-  handleQuery({
-    page: 1,
-    size: pagination.value.pageSize
-  })
+  handleQuery()
 })
 </script>
 
