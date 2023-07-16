@@ -75,6 +75,8 @@
 import {onMounted, ref} from 'vue'
 import axios from 'axios'
 import {message} from 'ant-design-vue'
+import {Tool} from "@/util/tool";
+
 const param = ref()
 // 这里必须设置value 为一个空对象
 param.value = {}
@@ -92,7 +94,7 @@ const modalVisible = ref<boolean>(false)
 const modalLoading = ref<boolean>(false)
 const edit = (record: any) => {
   modalVisible.value = true
-  ebook.value = record
+  ebook.value = Tool.copy(record)
 };
 // 新增
 const add = () => {
