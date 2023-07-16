@@ -101,7 +101,7 @@ const handleQuery = (params: any) => {
     loading.value = false
     const data = response.data
     if (data.success) {
-      ebooks.value = data.content
+      ebooks.value = data.content.list
       pagination.value.current = params.page
       pagination.value.total = data.content.total
     } else {
@@ -118,7 +118,10 @@ const handleTableChange = (pagination: any) => {
   })
 }
 onMounted(() => {
-  handleQuery({})
+  handleQuery({
+    page: 1,
+    size: pagination.value.pageSize
+  })
 })
 </script>
 
