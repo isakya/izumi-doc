@@ -15,7 +15,7 @@
           </template>
           <template v-if="column.key === 'action'">
             <a-space size="small">
-              <a-button type="primary" @click="edit">
+              <a-button type="primary" @click="edit(record)">
                 编辑
               </a-button>
               <a-button type="danger">
@@ -28,7 +28,23 @@
     </a-layout-content>
   </a-layout>
   <a-modal v-model:open="modalVisible" :confirm-loading="modalLoading" title="电子书表单" @ok="handleModalOk">
-    <p>test</p>
+    <a-form :modal="ebook" :label-col="{span: 2}">
+      <a-form-item label="封面">
+        <a-input v-model:value="ebook.cover" />
+      </a-form-item>
+      <a-form-item label="名称">
+        <a-input v-model:value="ebook.name" />
+      </a-form-item>
+      <a-form-item label="分类1">
+        <a-input v-model:value="ebook.category1Id" />
+      </a-form-item>
+      <a-form-item label="分类2">
+        <a-input v-model:value="ebook.category2Id" />
+      </a-form-item>
+      <a-form-item label="描述">
+        <a-input v-model:value="ebook.desc" type="text" />
+      </a-form-item>
+    </a-form>
   </a-modal>
 </template>
 <script lang="ts" setup>
@@ -47,8 +63,9 @@ const loading = ref(false)
 
 const modalVisible = ref<boolean>(false)
 const modalLoading = ref<boolean>(false)
-const edit = () => {
+const edit = (record: any) => {
   modalVisible.value = true
+  ebook.value = record
 };
 const handleModalOk = (e: MouseEvent) => {
   modalLoading.value = true
@@ -57,6 +74,9 @@ const handleModalOk = (e: MouseEvent) => {
     modalLoading.value = false
   }, 2000)
 };
+
+// 表单
+const ebook = ref()
 
 const columns = [
   {
