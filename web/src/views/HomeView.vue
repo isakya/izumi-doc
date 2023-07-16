@@ -82,10 +82,7 @@ const actions: Record<string, any>[] = [
 ];
 
 const ebooks = ref()
-
-onMounted(() => {
-  // 初始加载分类
-  handleQueryCategory()
+const handleQuery = () => {
   axios.get("/ebook/list", {
     params: {
       page: 1,
@@ -96,6 +93,11 @@ onMounted(() => {
     ebooks.value = data.content.list
     console.log(res)
   })
+}
+onMounted(() => {
+  // 初始加载分类
+  handleQueryCategory()
+  handleQuery()
 })
 </script>
 
