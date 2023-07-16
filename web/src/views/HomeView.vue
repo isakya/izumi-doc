@@ -86,11 +86,18 @@ const handleQueryCategory = () => {
     }
   })
 }
-
+let categoryId2 = 0
 const isShowWelcome = ref(true)
 // 菜单点击
 const handleClick = (value: any) => {
-  isShowWelcome.value = value.key === 'welcome';
+  if (value.key === 'welcome') {
+    isShowWelcome.value = true
+  } else {
+    categoryId2 = value.key
+    isShowWelcome.value = false
+    // 点击分类时调用
+    handleQueryEbook()
+  }
 }
 const actions: Record<string, any>[] = [
   {icon: StarOutlined, text: '156'},
@@ -99,11 +106,12 @@ const actions: Record<string, any>[] = [
 ];
 
 const ebooks = ref()
-const handleQuery = () => {
+const handleQueryEbook = () => {
   axios.get("/ebook/list", {
     params: {
       page: 1,
-      size: 1000
+      size: 1000,
+      categoryId2: categoryId2
     }
   }).then(res => {
     const data = res.data
@@ -114,7 +122,6 @@ const handleQuery = () => {
 onMounted(() => {
   // 初始加载分类
   handleQueryCategory()
-  handleQuery()
 })
 </script>
 
