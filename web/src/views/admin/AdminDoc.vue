@@ -1,7 +1,7 @@
 <template>
   <a-layout style="padding: 24px 0; background: #fff; margin-top: 50px">
     <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
-      <a-row>
+      <a-row :gutter="24">
         <a-col :span="8">
           <p>
             <a-form layout="inline">
@@ -22,15 +22,19 @@
               :data-source="level1"
               :row-key="record => record.id"
               :loading="loading"
+              size="small"
               :pagination="false"
           >
             <template #bodyCell="{ column, record }">
+              <template v-if="column.key === 'name'">
+                {{record.sort}} {{record.name}}
+              </template>
               <template v-if="column.key === 'cover'">
                 <img :src="record.cover" alt="avatar"/>
               </template>
               <template v-if="column.key === 'action'">
                 <a-space size="small">
-                  <a-button type="primary" @click="edit(record)">
+                  <a-button type="primary" @click="edit(record)" size="small">
                     编辑
                   </a-button>
                   <a-popconfirm
@@ -39,7 +43,7 @@
                       cancel-text="取消"
                       @confirm="del(record.id)"
                   >
-                    <a-button type="danger">
+                    <a-button type="danger" size="small">
                       删除
                     </a-button>
                   </a-popconfirm>
@@ -49,11 +53,16 @@
           </a-table>
         </a-col>
         <a-col :span="16">
-          <a-form :modal="doc" :label-col="{span: 3}">
-            <a-form-item label="名称">
-              <a-input v-model:value="doc.name"/>
+          <p>
+            <a-button type="primary" @click="handleSave">
+              保存
+            </a-button>
+          </p>
+          <a-form :modal="doc" :label-col="{span: 3}" laout="vertical">
+            <a-form-item>
+              <a-input v-model:value="doc.name" placeholder="请填写名称"/>
             </a-form-item>
-            <a-form-item label="父文档">
+            <a-form-item>
               <a-tree-select
                   v-model:value="doc.parent"
                   style="width: 100%"
@@ -65,10 +74,10 @@
               >
               </a-tree-select>
             </a-form-item>
-            <a-form-item label="排序">
-              <a-input v-model:value="doc.sort"/>
+            <a-form-item>
+              <a-input v-model:value="doc.sort" placeholder="请填写排序"/>
             </a-form-item>
-            <a-form-item label="内容">
+            <a-form-item>
               <div id="content"></div>
             </a-form-item>
           </a-form>
@@ -76,9 +85,6 @@
       </a-row>
     </a-layout-content>
   </a-layout>
-  <!--  <a-modal v-model:open="modalVisible" :confirm-loading="modalLoading" title="文档表单" @ok="handleModalOk">-->
-  <!--    -->
-  <!--  </a-modal>-->
 </template>
 <script lang="ts" setup>
 import {onMounted, ref, createVNode} from 'vue'
@@ -92,6 +98,7 @@ import ExclamationCircleOutlined from "@ant-design/icons-vue/ExclamationCircleOu
 const route = useRoute()
 const docs = ref()
 const editor = new E('#content')
+editor.config.zIndex = 0
 
 // 存储删除的id结果集
 const deleteIds: Array<string> = []
@@ -215,7 +222,7 @@ const del = (id: number) => {
   })
 }
 
-const handleModalOk = (e: MouseEvent) => {
+const handleSave = (e: MouseEvent) => {
   axios.post("/doc/save", doc.value).then((response) => {
     const data = response.data
     if (data.success) {
@@ -235,18 +242,9 @@ const columns = [
     key: 'name'
   },
   {
-    title: '父文档',
-    dataIndex: 'parent',
-    key: 'parent',
-  },
-  {
-    title: '顺序',
-    dataIndex: 'sort',
-    key: 'sort'
-  },
-  {
     title: 'Action',
-    key: 'action'
+    key: 'action',
+    width: 100,
   }
 ]
 
@@ -279,9 +277,7 @@ const handleQuery = () => {
 
 onMounted(() => {
   handleQuery()
-  setTimeout(() => {
-    editor.create()
-  }, 100)
+  editor.create()
 })
 </script>
 
