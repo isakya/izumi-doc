@@ -118,12 +118,8 @@ const deleteNames: Array<string> = [];
 const level1 = ref()
 const loading = ref(false)
 
-// 表单
-const doc = ref({})
-// 初始赋值为空对象 -> 初始从路由里获取电子书id并赋值
-doc.value = {
-  ebookId: route.query.ebookId
-}
+// 表单 -- 初始赋值为空对象 -> 初始从路由里获取电子书id并赋值
+const doc = ref({ebookId: route.query.ebookId})
 
 const edit = (record: any) => {
   // 清空富文本框
@@ -284,6 +280,9 @@ const handleQuery = () => {
 
       // 父文档下拉框初始化，相当于点击新增
       treeSelectData.value = Tool.copy(level1.value)
+      if (!treeSelectData.value) {
+        treeSelectData.value = []
+      }
       // 添加一个无字
       treeSelectData.value.unshift({id: 0, name: '无'})
     } else {
