@@ -74,17 +74,22 @@
   </a-modal>
 </template>
 <script lang="ts" setup>
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, createVNode} from 'vue'
 import axios from 'axios'
-import {message} from 'ant-design-vue'
+import {message, Modal} from 'ant-design-vue'
 import {Tool} from "@/util/tool";
 import {useRoute} from "vue-router";
 import E from 'wangeditor'
+import ExclamationCircleOutlined from "@ant-design/icons-vue/ExclamationCircleOutlined";
 
 const route = useRoute()
 const docs = ref()
 const editor = new E('#content')
 
+// 存储删除的id结果集
+const deleteIds: Array<string> = []
+// 获取所有要删除的文档名称
+const deleteNames: Array<string> = [];
 
 // 一级文档
 const level1 = ref()
@@ -169,6 +174,8 @@ const getDeleteIds = (treeSelectData: any, id: any) => {
     if (node.id === id) {
       // 将目标放入id结果集
       ids.push(id)
+      // 将目标名称放入名称结果集
+      deleteNames.push(node.name)
       // 遍历所有自及诶单，将所有子节点全部都加上disabled
       const children = node.children
       if (Tool.isNotEmpty(children)) {
@@ -188,13 +195,25 @@ const getDeleteIds = (treeSelectData: any, id: any) => {
 
 // 删除
 const del = (id: number) => {
+  // 清空数组，否则多次删除时，数组会一直增加
+  ids.length = 0
+  deleteNames.length = 0
   // 注意，响应式变量，必须加上 .value
   getDeleteIds(level1.value, id)
-  axios.delete("/doc/delete/" + ids.join(",")).then((response) => {
-    const data = response.data
-    if (data.success) {
-      // 重新加载列表
-      handleQuery()
+  Modal.confirm({
+    title: '重要提醒',
+    icon: createVNode(ExclamationCircleOutlined),
+    content: '将删除: 【' + deleteNames.join(",") + "】 删除后不可恢复,确定删除?",
+    onOk() {
+      axios.delete("/doc/delete/" + ids.join(",")).then((response) => {
+        const data = response.data
+        if (data.success) {
+          // 重新加载列表
+          handleQuery()
+        } else {
+          message.error(data.message)
+        }
+      })
     }
   })
 }
