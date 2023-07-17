@@ -18,12 +18,14 @@
             </a-form>
           </p>
           <a-table
+              v-if="level1?.length > 0"
               :columns="columns"
               :data-source="level1"
               :row-key="record => record.id"
               :loading="loading"
               size="small"
               :pagination="false"
+              :defaultExpandAllRows="true"
           >
             <template #bodyCell="{ column, record }">
               <template v-if="column.key === 'name'">
@@ -100,8 +102,6 @@ const docs = ref()
 const editor = new E('#content')
 editor.config.zIndex = 0
 
-// 存储删除的id结果集
-const deleteIds: Array<string> = []
 // 获取所有要删除的文档名称
 const deleteNames: Array<string> = [];
 
