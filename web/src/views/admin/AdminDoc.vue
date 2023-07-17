@@ -80,12 +80,21 @@
               <a-input v-model:value="doc.sort" placeholder="请填写排序"/>
             </a-form-item>
             <a-form-item>
+              <a-button type="primary" @click="handlePreviewContent">
+                <EyeOutlined /> 内容预览
+              </a-button>
+            </a-form-item>
+            <a-form-item>
               <div id="content"></div>
             </a-form-item>
           </a-form>
         </a-col>
       </a-row>
     </a-layout-content>
+    <!-- 抽屉 -->
+    <a-drawer width="900" placement="right" :closeable="false" :visible="drawerVisible" @close="onDrawerClose">
+      <div class="wangeditor" :innerHTML="previewHtml"></div>
+    </a-drawer>
   </a-layout>
 </template>
 <script lang="ts" setup>
@@ -95,7 +104,7 @@ import {message, Modal} from 'ant-design-vue'
 import {Tool} from "@/util/tool";
 import {useRoute} from "vue-router";
 import E from 'wangeditor'
-import ExclamationCircleOutlined from "@ant-design/icons-vue/ExclamationCircleOutlined";
+import { EyeOutlined, ExclamationCircleOutlined } from '@ant-design/icons-vue';
 
 const route = useRoute()
 const docs = ref()
@@ -294,6 +303,17 @@ const handleQueryContent = () => {
   })
 }
 
+// 富文本预览
+const drawerVisible = ref(false)
+const previewHtml = ref()
+const handlePreviewContent = () => {
+  const html = editor.txt.html()
+  previewHtml.value = html
+  drawerVisible.value = true
+}
+const onDrawerClose = () => {
+  drawerVisible.value = false
+}
 
 onMounted(() => {
   handleQuery()
