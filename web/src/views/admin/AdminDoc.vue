@@ -67,6 +67,9 @@
       <a-form-item label="排序">
         <a-input v-model:value="doc.sort"/>
       </a-form-item>
+      <a-form-item label="内容">
+        <div id="content"></div>
+      </a-form-item>
     </a-form>
   </a-modal>
 </template>
@@ -75,10 +78,13 @@ import {onMounted, ref} from 'vue'
 import axios from 'axios'
 import {message} from 'ant-design-vue'
 import {Tool} from "@/util/tool";
-import { useRoute } from "vue-router";
+import {useRoute} from "vue-router";
+import E from 'wangeditor'
 
 const route = useRoute()
 const docs = ref()
+const editor = new E('#content')
+
 
 // 一级文档
 const level1 = ref()
@@ -92,6 +98,9 @@ const modalLoading = ref<boolean>(false)
 const edit = (record: any) => {
   modalVisible.value = true
   doc.value = Tool.copy(record)
+  setTimeout(() => {
+    editor.create()
+  }, 100)
 
   // 不能选择当前节点及其所有子孙节点
   treeSelectData.value = Tool.copy(level1.value)
@@ -104,6 +113,9 @@ const edit = (record: any) => {
 const add = () => {
   modalVisible.value = true
   doc.value = {}
+  setTimeout(() => {
+    editor.create()
+  }, 100)
 
   treeSelectData.value = Tool.copy(level1.value)
   // 为选择树添加一个 "无"字
@@ -226,7 +238,6 @@ const columns = [
 ]
 
 
-
 /**
  * 数据查询
  */
@@ -251,7 +262,6 @@ const handleQuery = () => {
     }
   })
 }
-
 
 
 onMounted(() => {
