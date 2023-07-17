@@ -1,6 +1,7 @@
 <template>
   <a-layout style="padding: 24px 0; background: #fff; margin-top: 50px">
     <a-layout-content :style="{background: '#fff', padding: '24px', margin: 0, minHeight: '280px'}">
+      <h3 v-if="level1.length === 0">对不起，找不到相关文档!</h3>
       <a-row>
         <a-col :span="6">
           <a-tree
@@ -33,19 +34,17 @@ const level1 = ref()
 level1.value = []
 const html = ref()
 
-
-// 数据查询
-const handleQuery = () => {
-  axios.get("/doc/all/" + route.query.ebookId).then((res) => {
-    const data = res.data
+// 内容查询
+const handleQueryContent = (id: number) => {
+  if(!id) {
+    message.error('对不起，找不到相关文档！')
+    return
+  }
+  axios.get("/doc/find-content/" + id).then((response) => {
+    const data = response.data
     if (data.success) {
-      docs.value = data.content
-      level1.value = []
-      level1.value = Tool.array2Tree(docs.value, 0)
-      if (Tool.isNotEmpty(level1)) {
-        defaultSelectedKeys.value = [level1.value[0].id]
-        handleQueryContent(level1.value[0].id)
-      }
+      // 给富文本框赋值
+      html.value = data.content
     } else {
       message.error(data.message)
     }
@@ -56,13 +55,18 @@ const handleQuery = () => {
 const defaultSelectedKeys = ref()
 defaultSelectedKeys.value = []
 
-// 内容查询
-const handleQueryContent = (id: number) => {
-  axios.get("/doc/find-content/" + id).then((response) => {
-    const data = response.data
+// 数据查询
+const handleQuery = () => {
+  axios.get("/doc/all/" + route.query?.ebookId).then((res) => {
+    const data = res.data
     if (data.success) {
-      // 给富文本框赋值
-      html.value = data.content
+      docs.value = data.content
+      level1.value = []
+      level1.value = Tool.array2Tree(docs.value, 0)
+      if (Tool.isNotEmpty(level1)) {
+        defaultSelectedKeys.value = [level1.value[0]?.id]
+        handleQueryContent(level1.value[0]?.id)
+      }
     } else {
       message.error(data.message)
     }
