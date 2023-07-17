@@ -1,77 +1,84 @@
 <template>
   <a-layout style="padding: 24px 0; background: #fff; margin-top: 50px">
     <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
-      <p>
-        <a-form layout="inline">
-          <a-form-item>
-            <a-button type="primary" @click="handleQuery()">
-              刷新
-            </a-button>
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" @click="add">
-              新增
-            </a-button>
-          </a-form-item>
-        </a-form>
-      </p>
-      <a-table
-          :columns="columns"
-          :data-source="level1"
-          :row-key="record => record.id"
-          :loading="loading"
-          :pagination="false"
-      >
-        <template #bodyCell="{ column, record }">
-          <template v-if="column.key === 'cover'">
-            <img :src="record.cover" alt="avatar"/>
-          </template>
-          <template v-if="column.key === 'action'">
-            <a-space size="small">
-              <a-button type="primary" @click="edit(record)">
-                编辑
-              </a-button>
-              <a-popconfirm
-                  title="确认要删除吗?"
-                  ok-text="确认"
-                  cancel-text="取消"
-                  @confirm="del(record.id)"
-              >
-                <a-button type="danger">
-                  删除
+      <a-row>
+        <a-col :span="8">
+          <p>
+            <a-form layout="inline">
+              <a-form-item>
+                <a-button type="primary" @click="handleQuery()">
+                  刷新
                 </a-button>
-              </a-popconfirm>
-            </a-space>
-          </template>
-        </template>
-      </a-table>
+              </a-form-item>
+              <a-form-item>
+                <a-button type="primary" @click="add">
+                  新增
+                </a-button>
+              </a-form-item>
+            </a-form>
+          </p>
+          <a-table
+              :columns="columns"
+              :data-source="level1"
+              :row-key="record => record.id"
+              :loading="loading"
+              :pagination="false"
+          >
+            <template #bodyCell="{ column, record }">
+              <template v-if="column.key === 'cover'">
+                <img :src="record.cover" alt="avatar"/>
+              </template>
+              <template v-if="column.key === 'action'">
+                <a-space size="small">
+                  <a-button type="primary" @click="edit(record)">
+                    编辑
+                  </a-button>
+                  <a-popconfirm
+                      title="确认要删除吗?"
+                      ok-text="确认"
+                      cancel-text="取消"
+                      @confirm="del(record.id)"
+                  >
+                    <a-button type="danger">
+                      删除
+                    </a-button>
+                  </a-popconfirm>
+                </a-space>
+              </template>
+            </template>
+          </a-table>
+        </a-col>
+        <a-col :span="16">
+          <a-form :modal="doc" :label-col="{span: 3}">
+            <a-form-item label="名称">
+              <a-input v-model:value="doc.name"/>
+            </a-form-item>
+            <a-form-item label="父文档">
+              <a-tree-select
+                  v-model:value="doc.parent"
+                  style="width: 100%"
+                  :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                  placeholder="请选择父文档"
+                  tree-default-expand-all
+                  :tree-data="treeSelectData"
+                  :fieldNames="{label: 'name', key: 'id', value: 'id'}"
+              >
+              </a-tree-select>
+            </a-form-item>
+            <a-form-item label="排序">
+              <a-input v-model:value="doc.sort"/>
+            </a-form-item>
+            <a-form-item label="内容">
+              <div id="content"></div>
+            </a-form-item>
+          </a-form>
+        </a-col>
+      </a-row>
     </a-layout-content>
   </a-layout>
-  <a-modal v-model:open="modalVisible" :confirm-loading="modalLoading" title="文档表单" @ok="handleModalOk">
-    <a-form :modal="doc" :label-col="{span: 3}">
-      <a-form-item label="名称">
-        <a-input v-model:value="doc.name"/>
-      </a-form-item>
-      <a-form-item label="父文档">
-        <a-tree-select
-            v-model:value="doc.parent"
-            style="width: 100%"
-            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-            placeholder="请选择父文档"
-            tree-default-expand-all
-            :tree-data="treeSelectData"
-            :replaceFields="{label: 'name', key: 'id', value: 'id'}"
-        >
-        </a-tree-select>
-      </a-form-item>
-      <a-form-item label="排序">
-        <a-input v-model:value="doc.sort"/>
-      </a-form-item>
-      <a-form-item label="内容">
-        <div id="content"></div>
-      </a-form-item>
-    </a-form>
-  </a-modal>
+  <!--  <a-modal v-model:open="modalVisible" :confirm-loading="modalLoading" title="文档表单" @ok="handleModalOk">-->
+  <!--    -->
+  <!--  </a-modal>-->
 </template>
 <script lang="ts" setup>
 import {onMounted, ref, createVNode} from 'vue'
@@ -96,17 +103,11 @@ const level1 = ref()
 const loading = ref(false)
 
 // 表单
-const doc = ref()
+const doc = ref({})
 
-const modalVisible = ref<boolean>(false)
-const modalLoading = ref<boolean>(false)
+
 const edit = (record: any) => {
-  modalVisible.value = true
   doc.value = Tool.copy(record)
-  setTimeout(() => {
-    editor.create()
-  }, 100)
-
   // 不能选择当前节点及其所有子孙节点
   treeSelectData.value = Tool.copy(level1.value)
   setDisable(treeSelectData.value, record.id)
@@ -116,11 +117,7 @@ const edit = (record: any) => {
 
 // 新增
 const add = () => {
-  modalVisible.value = true
   doc.value = {}
-  setTimeout(() => {
-    editor.create()
-  }, 100)
 
   treeSelectData.value = Tool.copy(level1.value)
   // 为选择树添加一个 "无"字
@@ -219,12 +216,9 @@ const del = (id: number) => {
 }
 
 const handleModalOk = (e: MouseEvent) => {
-  modalLoading.value = true
   axios.post("/doc/save", doc.value).then((response) => {
-    modalLoading.value = false
     const data = response.data
     if (data.success) {
-      modalVisible.value = false
       // 重新加载列表
       handleQuery()
     } else {
@@ -285,6 +279,9 @@ const handleQuery = () => {
 
 onMounted(() => {
   handleQuery()
+  setTimeout(() => {
+    editor.create()
+  }, 100)
 })
 </script>
 
