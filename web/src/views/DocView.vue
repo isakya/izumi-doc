@@ -9,6 +9,7 @@
               @select="onSelect"
               :replaceFields="{title: 'name', key: 'id', value: 'id'}"
               :defaultExpandAll="true"
+              :defaultSelectedKeys="defaultSelectedKeys"
           ></a-tree>
         </a-col>
         <a-col :span="18">
@@ -41,11 +42,19 @@ const handleQuery = () => {
       docs.value = data.content
       level1.value = []
       level1.value = Tool.array2Tree(docs.value, 0)
+      if (Tool.isNotEmpty(level1)) {
+        defaultSelectedKeys.value = [level1.value[0].id]
+        handleQueryContent(level1.value[0].id)
+      }
     } else {
       message.error(data.message)
     }
   })
 }
+
+// 文档页面加载默认选中的节点
+const defaultSelectedKeys = ref()
+defaultSelectedKeys.value = []
 
 // 内容查询
 const handleQueryContent = (id: number) => {
