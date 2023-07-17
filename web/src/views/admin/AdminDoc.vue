@@ -75,11 +75,15 @@ import {onMounted, ref} from 'vue'
 import axios from 'axios'
 import {message} from 'ant-design-vue'
 import {Tool} from "@/util/tool";
+import { useRoute } from "vue-router";
 
+const route = useRoute()
 const docs = ref()
+
 // 一级文档
 const level1 = ref()
 const loading = ref(false)
+
 // 表单
 const doc = ref()
 
@@ -95,6 +99,7 @@ const edit = (record: any) => {
   // 为选择树添加一个 "无"字
   treeSelectData.value.unshift({id: 0, name: '无'})
 };
+
 // 新增
 const add = () => {
   modalVisible.value = true
@@ -103,7 +108,13 @@ const add = () => {
   treeSelectData.value = Tool.copy(level1.value)
   // 为选择树添加一个 "无"字
   treeSelectData.value.unshift({id: 0, name: '无'})
+
+  // 清空
+  doc.value = {
+    ebookId: route.query.ebookId
+  }
 }
+
 // 删除
 const del = (id: number) => {
   axios.delete("/doc/delete/" + id).then((response) => {
@@ -114,6 +125,7 @@ const del = (id: number) => {
     }
   })
 }
+
 const handleModalOk = (e: MouseEvent) => {
   modalLoading.value = true
   axios.post("/doc/save", doc.value).then((response) => {
@@ -151,6 +163,7 @@ const columns = [
     key: 'action'
   }
 ]
+
 // 树选择组件会随着当前编辑的节点而变化，所以单独声明一个响应式的变量
 const treeSelectData = ref()
 treeSelectData.value = []
@@ -207,6 +220,7 @@ const handleQuery = () => {
     }
   })
 }
+
 onMounted(() => {
   handleQuery()
 })
