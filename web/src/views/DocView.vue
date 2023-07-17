@@ -32,7 +32,7 @@ const level1 = ref()
 level1.value = []
 // 数据查询
 const handleQuery = () => {
-  axios.get("/doc/all").then((res) => {
+  axios.get("/doc/all/" + route.query.ebookId).then((res) => {
     const data = res.data
     if (data.success) {
       docs.value = data.content

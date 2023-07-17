@@ -34,9 +34,11 @@ public class DocService {
     @Resource
     private ContentMapper contentMapper;
 
-    public List<DocQueryResp> all() {
+    public List<DocQueryResp> all(Long ebookId) {
         DocExample docExample = new DocExample();
-        docExample.setOrderByClause("sort asc");
+        // 如果 ebookId = null 那就搜不到文档
+        docExample.createCriteria().andEbookIdEqualTo(ebookId);
+        docExample.setOrderByClause("sort asc"); // 排序
         List<Doc> docList = docMapper.selectByExample(docExample);
 
         // 列表复制
