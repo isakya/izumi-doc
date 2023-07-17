@@ -223,6 +223,7 @@ const del = (id: number) => {
 }
 
 const handleSave = (e: MouseEvent) => {
+  doc.value.content = editor.txt.html()
   axios.post("/doc/save", doc.value).then((response) => {
     const data = response.data
     if (data.success) {

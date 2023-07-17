@@ -21,6 +21,17 @@ public class DocSaveReq {
 
     private Integer voteCount;
 
+    @NotNull(message = "【内容】不能为空")
+    private String content;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public Long getId() {
         return id;
     }
@@ -89,6 +100,7 @@ public class DocSaveReq {
         sb.append(", name=").append(name);
         sb.append(", sort=").append(sort);
         sb.append(", viewCount=").append(viewCount);
+        sb.append(", content=").append(content);
         sb.append(", voteCount=").append(voteCount);
         sb.append("]");
         return sb.toString();
