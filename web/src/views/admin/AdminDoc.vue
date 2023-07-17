@@ -120,7 +120,10 @@ const loading = ref(false)
 
 // 表单
 const doc = ref({})
-
+// 初始赋值为空对象 -> 初始从路由里获取电子书id并赋值
+doc.value = {
+  ebookId: route.query.ebookId
+}
 
 const edit = (record: any) => {
   // 清空富文本框
