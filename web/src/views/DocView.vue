@@ -12,7 +12,7 @@
           ></a-tree>
         </a-col>
         <a-col :span="18">
-          <div :innerHTML="html"></div>
+          <div class="wangeditor" :innerHTML="html"></div>
         </a-col>
       </a-row>
     </a-layout-content>
@@ -73,5 +73,56 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style>
+/* table 样式 */
+.wangeditor table {
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+}
+.wangeditor table td,
+.wangeditor table th {
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  padding: 3px 5px;
+}
+.wangeditor table th {
+  border-bottom: 2px solid #ccc;
+  text-align: center;
+}
+/* blockquote 样式 */
+.wangeditor blockquote {
+  display: block;
+  border-left: 8px solid #d0e5f2;
+  padding: 5px 10px;
+  margin: 10px 0;
+  line-height: 1.4;
+  font-size: 100%;
+  background-color: #f1f1f1;
+}
+/* code 样式 */
+.wangeditor code {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  background-color: #f1f1f1;
+  border-radius: 3px;
+  padding: 3px 5px;
+  margin: 0 3px;
+}
+.wangeditor pre code {
+  display: block;
+}
+/* ul ol 样式 */
+.wangeditor ul, ol {
+  margin: 10px 0 10px 20px;
+}
+/**
+和antdv p冲突 覆盖掉样式
+ */
+.wangeditor blockquote p {
+  font-family: "YouYuan";
+  margin: 20px 10px !important;
+  font-size: 16px !important;
+  font-weight: 600;
+}
 </style>
