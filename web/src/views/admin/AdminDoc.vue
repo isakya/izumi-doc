@@ -114,6 +114,8 @@ const doc = ref({})
 
 
 const edit = (record: any) => {
+  // 清空富文本框
+  editor.txt.html('')
   doc.value = Tool.copy(record)
   handleQueryContent()
   // 不能选择当前节点及其所有子孙节点
@@ -125,16 +127,17 @@ const edit = (record: any) => {
 
 // 新增
 const add = () => {
-  doc.value = {}
-
-  treeSelectData.value = Tool.copy(level1.value)
-  // 为选择树添加一个 "无"字
-  treeSelectData.value.unshift({id: 0, name: '无'})
-
+  // 清空富文本框
+  editor.txt.html('')
   // 清空
   doc.value = {
     ebookId: route.query.ebookId
   }
+  treeSelectData.value = Tool.copy(level1.value)
+  // 为选择树添加一个 "无"字
+  treeSelectData.value.unshift({id: 0, name: '无'})
+
+
 }
 
 // 树选择组件会随着当前编辑的节点而变化，所以单独声明一个响应式的变量
@@ -228,6 +231,7 @@ const handleSave = (e: MouseEvent) => {
   axios.post("/doc/save", doc.value).then((response) => {
     const data = response.data
     if (data.success) {
+      message.success("保存成功！")
       // 重新加载列表
       handleQuery()
     } else {
