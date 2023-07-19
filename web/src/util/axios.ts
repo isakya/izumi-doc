@@ -1,4 +1,6 @@
 import axios from "axios"
+import store from "@/store";
+import {Tool} from "@/util/tool";
 
 const runAxiosConfig = () => {
     axios.defaults.baseURL = process.env.VUE_APP_SERVER
@@ -7,6 +9,11 @@ const runAxiosConfig = () => {
      */
     axios.interceptors.request.use(function (config) {
         console.log('请求参数：', config)
+        const token = store.state.user.token
+        if (Tool.isNotEmpty(token)) {
+            config.headers.token = token
+            console.log('请求headers增加token', token)
+        }
         return config;
     }, error => {
         return Promise.reject(error);
