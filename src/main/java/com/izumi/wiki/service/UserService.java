@@ -77,6 +77,7 @@ public class UserService {
             // 更新
             // 更新
             user.setLoginName(null); // 设置为空，不更新登录名，不让用户进行编辑
+            user.setPassword(null); // 修改的时候也不修改密码
             userMapper.updateByPrimaryKeySelective(user); // Selective：表字段有值才会更新
         }
     }
