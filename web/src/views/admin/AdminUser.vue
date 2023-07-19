@@ -66,7 +66,7 @@
   </a-modal>
   <a-modal
       title="重置密码"
-      v-model:visible="resetModalVisible"
+      v-model:open="resetModalVisible"
       :confirm-loading="resetModalLoading"
       @ok="handleResetModalOk"
   >

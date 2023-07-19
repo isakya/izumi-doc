@@ -26,15 +26,18 @@
         </a-menu>
       </a-col>
       <a-col :span="4">
+        <div class="login-menu" v-show="!!user.id">
+          <span>您好: {{user.name}}</span>
+        </div>
         <div class="login-menu">
-          <span @click="showLoginModal">登录</span>
+          <span @click="showLoginModal" v-show="!user.id">登录</span>
         </div>
       </a-col>
     </a-row>
   </a-layout-header>
   <a-modal
       title="登录"
-      v-model:visible="loginModalVisible"
+      v-model:open="loginModalVisible"
       :confirm-loading="loginModalLoading"
       @ok="login">
     <a-form :model="loginUser" :label-col="{span: 6}" :wrapper-col="{span: 18}">
@@ -67,7 +70,7 @@ const loginModalLoading = ref(false)
 const showLoginModal = () => {
   loginModalVisible.value = true
 }
-
+const user = ref({})
 // 登录
 const login = () => {
   console.log('开始登录')
@@ -79,6 +82,7 @@ const login = () => {
     if (data.success) {
       loginModalVisible.value = false
       message.success("登录成功!")
+      user.value = data.content
     } else {
       message.error(data.message)
     }
@@ -94,6 +98,7 @@ const login = () => {
 
 .login-menu {
   float: right;
+  margin-left: 20px;
   color: rgba(255, 255, 255, 0.65);
   cursor: pointer;
   transition: color 0.3s;
