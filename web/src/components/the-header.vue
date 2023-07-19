@@ -86,6 +86,10 @@ const user = computed(() => store.state.user)
 const login = () => {
   console.log('开始登录')
   loginModalLoading.value = true
+  // 前端校验
+  if (loginUser.value.password.length < 6 || loginUser.value.password.length > 32) {
+    message.error('【密码】6~32位')
+  }
   loginUser.value.password = hexMd5(loginUser.value.password + KEY)
   axios.post("/user/login", loginUser.value).then((res) => {
     loginModalLoading.value = false
