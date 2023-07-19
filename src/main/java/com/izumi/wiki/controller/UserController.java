@@ -1,6 +1,7 @@
 package com.izumi.wiki.controller;
 
 import com.izumi.wiki.req.UserQueryReq;
+import com.izumi.wiki.req.UserResetPassword;
 import com.izumi.wiki.req.UserSaveReq;
 import com.izumi.wiki.resp.CommonResp;
 import com.izumi.wiki.resp.PageResp;
@@ -43,6 +44,15 @@ public class UserController {
     public CommonResp delete(@PathVariable Long id) {
         CommonResp resp = new CommonResp<>();
         userService.delete(id);
+        return resp;
+    }
+
+    @PostMapping("/reset-password")
+    public CommonResp resetPassword(@Valid @RequestBody UserResetPassword req) {
+        // 十六进制的md5加密
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp resp = new CommonResp<>();
+        userService.resetPassword(req);
         return resp;
     }
 }

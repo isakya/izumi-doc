@@ -8,6 +8,7 @@ import com.izumi.wiki.exception.BusinessException;
 import com.izumi.wiki.exception.BusinessExceptionCode;
 import com.izumi.wiki.mapper.UserMapper;
 import com.izumi.wiki.req.UserQueryReq;
+import com.izumi.wiki.req.UserResetPassword;
 import com.izumi.wiki.req.UserSaveReq;
 import com.izumi.wiki.resp.PageResp;
 import com.izumi.wiki.resp.UserQueryResp;
@@ -89,6 +90,16 @@ public class UserService {
      */
     public void delete(Long id) {
         userMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 修改密码
+     * @param req
+     */
+    public void resetPassword(UserResetPassword req) {
+        // 只有 id 和 password 有值
+        User user = CopyUtil.copy(req, User.class);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
 
