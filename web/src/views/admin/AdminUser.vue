@@ -63,6 +63,9 @@
   </a-modal>
 </template>
 <script lang="ts" setup>
+// 告诉typescript 这两个变量是存在的
+declare let hexMd5: any;
+declare let KEY: any;
 import {onMounted, ref} from 'vue'
 import axios from 'axios'
 import {message} from 'ant-design-vue'
@@ -113,10 +116,13 @@ const del = (id: number) => {
   })
 }
 const handleModalOk = (e: MouseEvent) => {
+  // 对前端传的密码进行加密
+  user.value.password = hexMd5(user.value.password + KEY);
   modalLoading.value = true
   // 两个分类
   axios.post("/user/save", user.value).then((response) => {
     modalLoading.value = false
+
     const data = response.data
     if(data.success) {
       modalVisible.value = false
