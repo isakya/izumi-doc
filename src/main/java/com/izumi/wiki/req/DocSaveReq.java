@@ -1,27 +1,27 @@
 package com.izumi.wiki.req;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 
 public class DocSaveReq {
     private Long id;
 
-    @NotNull(message = "【电子书】不能为空")
+    @NotEmpty(message = "【电子书】不能为空")
     private Long ebookId;
 
-    @NotNull(message = "【父文档】不能为空")
+    @NotEmpty(message = "【父文档】不能为空")
     private Long parent;
 
-    @NotNull(message = "【文档名称】不能为空")
+    @NotEmpty(message = "【文档名称】不能为空")
     private String name;
 
-    @NotNull(message = "【排序】不能为空")
+    @NotEmpty(message = "【排序】不能为空")
     private Integer sort;
 
     private Integer viewCount;
 
     private Integer voteCount;
 
-    @NotNull(message = "【内容】不能为空")
+    @NotEmpty(message = "【内容】不能为空")
     private String content;
 
     public String getContent() {
