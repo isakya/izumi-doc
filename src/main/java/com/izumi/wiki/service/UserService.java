@@ -7,10 +7,12 @@ import com.izumi.wiki.domain.UserExample;
 import com.izumi.wiki.exception.BusinessException;
 import com.izumi.wiki.exception.BusinessExceptionCode;
 import com.izumi.wiki.mapper.UserMapper;
+import com.izumi.wiki.req.UserLoginReq;
 import com.izumi.wiki.req.UserQueryReq;
 import com.izumi.wiki.req.UserResetPassword;
 import com.izumi.wiki.req.UserSaveReq;
 import com.izumi.wiki.resp.PageResp;
+import com.izumi.wiki.resp.UserLoginResp;
 import com.izumi.wiki.resp.UserQueryResp;
 import com.izumi.wiki.util.CopyUtil;
 import com.izumi.wiki.util.SnowFlake;
@@ -102,6 +104,34 @@ public class UserService {
         userMapper.updateByPrimaryKeySelective(user);
     }
 
+    /**
+     * 登录
+     * @param req
+     * @return
+     */
+    public UserLoginResp login(UserLoginReq req) {
+        // 校验 按用户名去数据库查
+        User userDB = selectByLoginName(req.getLoginName());
+        if (ObjectUtils.isEmpty(userDB)) {
+            // 用户名不存在
+            LOG.info("用户名不存在: {}", req.getLoginName()); // 日志记录一下
+            // 提示注意 用户名不存在或密码不对，干扰攻击者的判断 一个模糊的提示
+            throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+        } else {
+            // 比对密码
+            if (userDB.getPassword().equals(req.getPassword())) {
+                // 登录成功
+                UserLoginResp userLoginResp = CopyUtil.copy(userDB, UserLoginResp.class);
+                return userLoginResp;
+            } else {
+                // 密码不正确
+                // 可以尝试加一个功能：输入错误几次以上就锁定用户
+                LOG.info("密码不对, 输入密码: {}, 数据库密码: {}", req.getLoginName(), userDB.getPassword()); // 日志记录一下
+                throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+            }
+        }
+    }
+
 
     public User selectByLoginName(String LoginName) {
         UserExample userExample = new UserExample();
@@ -114,4 +144,5 @@ public class UserService {
             return userList.get(0);
         }
     }
+
 }

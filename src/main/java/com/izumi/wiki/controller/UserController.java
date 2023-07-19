@@ -1,10 +1,12 @@
 package com.izumi.wiki.controller;
 
+import com.izumi.wiki.req.UserLoginReq;
 import com.izumi.wiki.req.UserQueryReq;
 import com.izumi.wiki.req.UserResetPassword;
 import com.izumi.wiki.req.UserSaveReq;
 import com.izumi.wiki.resp.CommonResp;
 import com.izumi.wiki.resp.PageResp;
+import com.izumi.wiki.resp.UserLoginResp;
 import com.izumi.wiki.resp.UserQueryResp;
 import com.izumi.wiki.service.UserService;
 import org.springframework.util.DigestUtils;
@@ -53,6 +55,16 @@ public class UserController {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.resetPassword(req);
+        return resp;
+    }
+
+    @PostMapping("/login")
+    public CommonResp logn(@Valid @RequestBody UserLoginReq req) {
+        // 十六进制的md5加密
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp<UserLoginResp> resp = new CommonResp<>();
+        UserLoginResp userLoginResp = userService.login(req);
+        resp.setContent(userLoginResp);
         return resp;
     }
 }
