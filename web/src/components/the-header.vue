@@ -11,13 +11,13 @@
           <a-menu-item key="/">
             <router-link to="/">首页</router-link>
           </a-menu-item>
-          <a-menu-item key="ebook">
+          <a-menu-item key="ebook" :style="user?.id ? null : {display: 'none'}">
             <router-link to="/admin/ebook">电子书管理</router-link>
           </a-menu-item>
-          <a-menu-item key="category">
+          <a-menu-item key="category" :style="user?.id ? null : {display: 'none'}">
             <router-link to="/admin/category">分类管理</router-link>
           </a-menu-item>
-          <a-menu-item key="user">
+          <a-menu-item key="user" :style="user?.id ? null : {display: 'none'}">
             <router-link to="/admin/user">用户管理</router-link>
           </a-menu-item>
           <a-menu-item key="about">
@@ -105,7 +105,7 @@ const login = () => {
 // 退出登录
 const logout = () => {
   console.log('退出登录开始')
-  axios.get("/user/logout/" + user.value.token).then((res) => {
+  axios.get("/user/logout/" + user?.value?.token).then((res) => {
     const data = res.data
     if (data.success) {
       message.success("退出成功")
