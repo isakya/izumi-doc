@@ -26,6 +26,15 @@
         </a-menu>
       </a-col>
       <a-col :span="4">
+        <a-popconfirm
+            title="确认退出吗?"
+            ok-text="是"
+            cancel-text="否"
+            @confirm="logout">
+          <a class="login-menu" v-show="!!user.id">
+            <span>退出登录</span>
+          </a>
+        </a-popconfirm>
         <div class="login-menu" v-show="!!user.id">
           <span>您好: {{user.name}}</span>
         </div>
@@ -87,6 +96,20 @@ const login = () => {
       // user.value = data.content
       // 触发vuex的方法
       store.commit("setUser", data.content)
+    } else {
+      message.error(data.message)
+    }
+  })
+}
+
+// 退出登录
+const logout = () => {
+  console.log('退出登录开始')
+  axios.get("/user/logout/" + user.value.token).then((res) => {
+    const data = res.data
+    if (data.success) {
+      message.success("退出成功")
+      store.commit("setUser", {})
     } else {
       message.error(data.message)
     }
