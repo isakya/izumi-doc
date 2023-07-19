@@ -51,7 +51,7 @@
   <a-modal v-model:open="modalVisible" :confirm-loading="modalLoading" title="电子书表单" @ok="handleModalOk">
     <a-form :modal="user" :label-col="{span: 3}">
       <a-form-item label="登录名">
-        <a-input v-model:value="user.loginName" />
+        <a-input v-model:value="user.loginName" :disabled="!!user.id"/>
       </a-form-item>
       <a-form-item label="昵称">
         <a-input v-model:value="user.name"/>
