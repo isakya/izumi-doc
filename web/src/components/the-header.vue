@@ -70,7 +70,9 @@ const loginModalLoading = ref(false)
 const showLoginModal = () => {
   loginModalVisible.value = true
 }
-const user = ref({})
+
+const user = computed(() => store.state.user)
+
 // 登录
 const login = () => {
   console.log('开始登录')
@@ -82,9 +84,9 @@ const login = () => {
     if (data.success) {
       loginModalVisible.value = false
       message.success("登录成功!")
-      user.value = data.content
+      // user.value = data.content
       // 触发vuex的方法
-      store.commit("setUser", user.value)
+      store.commit("setUser", data.content)
     } else {
       message.error(data.message)
     }
