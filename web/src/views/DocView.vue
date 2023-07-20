@@ -8,7 +8,7 @@
               v-if="level1.length > 0"
               :tree-data="level1"
               @select="onSelect"
-              :replaceFields="{title: 'name', key: 'id', value: 'id'}"
+              :fieldNames="{title: 'name', key: 'id', value: 'id'}"
               :defaultExpandAll="true"
               :defaultSelectedKeys="defaultSelectedKeys"
           ></a-tree>
