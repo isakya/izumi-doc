@@ -7,6 +7,7 @@ import com.izumi.wiki.domain.Doc;
 import com.izumi.wiki.domain.DocExample;
 import com.izumi.wiki.mapper.ContentMapper;
 import com.izumi.wiki.mapper.DocMapper;
+import com.izumi.wiki.mapper.DocMapperCust;
 import com.izumi.wiki.req.DocQueryReq;
 import com.izumi.wiki.req.DocSaveReq;
 import com.izumi.wiki.resp.DocQueryResp;
@@ -30,6 +31,9 @@ public class DocService {
 
     @Resource
     private SnowFlake snowFlake;
+
+    @Resource
+    private DocMapperCust docMapperCust;
 
     @Resource
     private ContentMapper contentMapper;
@@ -81,6 +85,8 @@ public class DocService {
         if (ObjectUtils.isEmpty(req.getId())) {
             // 新增
             doc.setId(snowFlake.nextId());
+            doc.setViewCount(0);
+            doc.setVoteCount(0);
             docMapper.insert(doc);
 
             content.setId(doc.getId());
@@ -109,6 +115,8 @@ public class DocService {
 
     public String findContent(Long id) {
         Content content = contentMapper.selectByPrimaryKey(id);
+        // 更新文档阅读数
+        docMapperCust.increaseViewCount(id);
         if (!ObjectUtils.isEmpty(content)) {
             return content.getContent();
         } else {
