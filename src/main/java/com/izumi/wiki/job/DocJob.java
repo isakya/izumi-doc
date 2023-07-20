@@ -25,7 +25,9 @@ public class DocJob {
 //        String dateString = format.format(new Date());
 //        Thread.sleep(1500);
 //        LOG.info("每隔1.5秒执种执行一次: {}", dateString);
-
+        LOG.info("更新电子书下的文档数据开始");
+        long startTime = System.currentTimeMillis();
         docService.updateEbookInfo();
+        LOG.info("更新电子书下的文档数据结束，耗时: {} 毫秒", System.currentTimeMillis() - startTime);
     }
 }
