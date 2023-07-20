@@ -14,21 +14,23 @@
           ></a-tree>
         </a-col>
         <a-col :span="18">
-          <div>
-            <h2>{{ doc.name }}</h2>
+          <div v-if="level1.length !== 0">
             <div>
-              <span>阅读数: {{ doc.viewCount }}</span> &nbsp;&nbsp;
-              <span>点赞数: {{ doc.voteCount }}</span>
+              <h2>{{ doc?.name }}</h2>
+              <div>
+                <span>阅读数: {{ doc?.viewCount }}</span> &nbsp;&nbsp;
+                <span>点赞数: {{ doc?.voteCount }}</span>
+              </div>
+              <a-divider style="height: 2px;background-color: #9999cc"></a-divider>
             </div>
-            <a-divider style="height: 2px;background-color: #9999cc"></a-divider>
-          </div>
-          <div class="wangeditor" :innerHTML="html"></div>
-          <div class="vote-div">
-            <a-button type="primary" shape="round" :size="'large'" @click="vote">
-              <template #icon>
-                <LikeOutlined/> &nbsp;点赞: {{ doc.voteCount }}
-              </template>
-            </a-button>
+            <div class="wangeditor" :innerHTML="html"></div>
+            <div class="vote-div">
+              <a-button type="primary" shape="round" :size="'large'" @click="vote">
+                <template #icon>
+                  <LikeOutlined/> &nbsp;点赞: {{ doc?.voteCount }}
+                </template>
+              </a-button>
+            </div>
           </div>
         </a-col>
       </a-row>
@@ -42,6 +44,7 @@ import axios from "axios";
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
 import {useRoute} from "vue-router";
+import { LikeOutlined } from '@ant-design/icons-vue';
 
 const route = useRoute()
 const docs = ref()

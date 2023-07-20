@@ -5,6 +5,8 @@ import com.github.pagehelper.PageInfo;
 import com.izumi.wiki.domain.Content;
 import com.izumi.wiki.domain.Doc;
 import com.izumi.wiki.domain.DocExample;
+import com.izumi.wiki.exception.BusinessException;
+import com.izumi.wiki.exception.BusinessExceptionCode;
 import com.izumi.wiki.mapper.ContentMapper;
 import com.izumi.wiki.mapper.DocMapper;
 import com.izumi.wiki.mapper.DocMapperCust;
@@ -13,6 +15,8 @@ import com.izumi.wiki.req.DocSaveReq;
 import com.izumi.wiki.resp.DocQueryResp;
 import com.izumi.wiki.resp.PageResp;
 import com.izumi.wiki.util.CopyUtil;
+import com.izumi.wiki.util.RedisUtil;
+import com.izumi.wiki.util.RequestContext;
 import com.izumi.wiki.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +41,9 @@ public class DocService {
 
     @Resource
     private ContentMapper contentMapper;
+
+    @Resource
+    private RedisUtil redisUtil;
 
     public List<DocQueryResp> all(Long ebookId) {
         DocExample docExample = new DocExample();
@@ -135,6 +142,14 @@ public class DocService {
      */
     public void vote(Long id) {
         // 更新文档点赞数
-        docMapperCust.increaseVoteCount(id);
+        // docMapperCust.increaseVoteCount(id);
+
+        // 远程IP+doc.id作为key，24小时内不能重复点击
+        String key = RequestContext.getRemoteAddr();
+        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + key, 3600 * 24)) {
+            docMapperCust.increaseVoteCount(id);
+        } else {
+            throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
+        }
     }
 }
