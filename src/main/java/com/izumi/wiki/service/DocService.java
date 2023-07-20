@@ -18,7 +18,6 @@ import com.izumi.wiki.util.CopyUtil;
 import com.izumi.wiki.util.RedisUtil;
 import com.izumi.wiki.util.RequestContext;
 import com.izumi.wiki.util.SnowFlake;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -51,8 +50,8 @@ public class DocService {
     @Resource
     private WsService wsService;
 
-    @Resource
-    private RocketMQTemplate rocketMQTemplate;
+    // @Resource
+    // private RocketMQTemplate rocketMQTemplate;
 
     public List<DocQueryResp> all(Long ebookId) {
         DocExample docExample = new DocExample();
@@ -166,9 +165,10 @@ public class DocService {
         Doc docDb = docMapper.selectByPrimaryKey(id);
         // 取出日志流水号
         String log_id = MDC.get("LOG_ID");
-        // wsService.sendInfo("【" + docDb.getName() + "】被点赞!", log_id);
+        wsService.sendInfo("【" + docDb.getName() + "】被点赞!", log_id);
+
         // 一个业务逻辑一个 topic 发送方
-        rocketMQTemplate.convertAndSend("VOTE_TOPIC", "【" + docDb.getName() + "】被点赞!");
+        // rocketMQTemplate.convertAndSend("VOTE_TOPIC", "【" + docDb.getName() + "】被点赞!");
     }
 
 
