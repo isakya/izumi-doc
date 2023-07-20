@@ -111,7 +111,7 @@ const onSelect = (selectedKeys: any, info: any) => {
   console.log(selectedKeys, info)
   if (Tool.isNotEmpty(selectedKeys)) {
     // 选中某一节点时，加载该节点的文档信息
-    doc.value = info.selectedNodes[0].props
+    doc.value = info.selectedNodes[0]
     // 加载内容
     handleQueryContent(selectedKeys[0])
   }

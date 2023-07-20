@@ -1,17 +1,18 @@
 package com.izumi.wiki.req;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 public class CategorySaveReq {
     private Long id;
 
     private Long parent;
 
+    // 这个可以过滤掉 "" 空字符串
     @NotEmpty(message = "【名称】不能为空")
     private String name;
 
-    // 这个可以过滤掉 "" 空字符串
-    @NotEmpty(message = "【排序】不能为空")
+    @NotNull(message = "【排序】不能为空")
     private Integer sort;
 
     public Long getId() {
