@@ -14,4 +14,6 @@ public interface DocMapperCust {
      * @param id
      */
     void increaseVoteCount(@Param("id") Long id);
+
+    void updateEbookInfo();
 }
