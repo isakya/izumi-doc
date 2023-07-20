@@ -42,10 +42,18 @@
         <template #renderItem="{ item }">
           <a-list-item key="item.name">
             <template #actions>
-          <span v-for="{ icon, text } in actions" :key="icon">
-            <component :is="icon" style="margin-right: 8px"/>
-            {{ text }}
-          </span>
+              <span>
+                <FileOutlined style="margin-right: 8px"/>
+                {{ item.docCount }}
+              </span>
+                <span>
+                <UserOutlined style="margin-right: 8px"/>
+                {{ item.viewCount }}
+              </span>
+                <span>
+                <LikeOutlined style="margin-right: 8px"/>
+                {{ item.voteCount }}
+              </span>
             </template>
             <a-list-item-meta :description="item.description">
               <template #title>
@@ -66,7 +74,7 @@
 
 <script lang="ts" setup>
 import axios from 'axios'
-import {StarOutlined, LikeOutlined, MessageOutlined, BranchesOutlined, HomeOutlined} from '@ant-design/icons-vue';
+import {StarOutlined, MessageOutlined, FileOutlined, UserOutlined, LikeOutlined, BranchesOutlined, HomeOutlined} from '@ant-design/icons-vue';
 import {onMounted, ref} from "vue";
 import {message} from 'ant-design-vue'
 import {Tool} from '@/util/tool'
@@ -101,11 +109,11 @@ const handleClick = (value: any) => {
     handleQueryEbook()
   }
 }
-const actions: Record<string, any>[] = [
-  {icon: StarOutlined, text: '156'},
-  {icon: LikeOutlined, text: '156'},
-  {icon: MessageOutlined, text: '2'},
-];
+// const actions: Record<string, any>[] = [
+//   {icon: StarOutlined, text: '156'},
+//   {icon: LikeOutlined, text: '156'},
+//   {icon: MessageOutlined, text: '2'},
+// ];
 
 const ebooks = ref()
 const handleQueryEbook = () => {
