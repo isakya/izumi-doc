@@ -113,6 +113,11 @@ public class DocService {
         docMapper.deleteByExample(docExample);
     }
 
+    /**
+     * 根据id查找文档
+     * @param id
+     * @return
+     */
     public String findContent(Long id) {
         Content content = contentMapper.selectByPrimaryKey(id);
         // 更新文档阅读数
@@ -122,5 +127,14 @@ public class DocService {
         } else {
             return "";
         }
+    }
+
+    /**
+     * 点赞
+     * @param id
+     */
+    public void vote(Long id) {
+        // 更新文档点赞数
+        docMapperCust.increaseVoteCount(id);
     }
 }

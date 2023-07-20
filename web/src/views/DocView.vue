@@ -23,6 +23,13 @@
             <a-divider style="height: 2px;background-color: #9999cc"></a-divider>
           </div>
           <div class="wangeditor" :innerHTML="html"></div>
+          <div class="vote-div">
+            <a-button type="primary" shape="round" :size="'large'" @click="vote">
+              <template #icon>
+                <LikeOutlined/> &nbsp;点赞: {{ doc.voteCount }}
+              </template>
+            </a-button>
+          </div>
         </a-col>
       </a-row>
     </a-layout-content>
@@ -79,6 +86,18 @@ const handleQuery = () => {
         // 初始显示文档信息
         doc.value = level1.value[0]
       }
+    } else {
+      message.error(data.message)
+    }
+  })
+}
+
+// 点赞
+const vote = () => {
+  axios.get("/doc/vote/" + doc?.value?.id).then((res) => {
+    const data = res.data
+    if (data.success) {
+      doc.value.voteCount++;
     } else {
       message.error(data.message)
     }
@@ -151,5 +170,10 @@ onMounted(() => {
   margin: 20px 10px !important;
   font-size: 16px !important;
   font-weight: 600;
+}
+
+.vote-div {
+  padding: 15px;
+  text-align: center;
 }
 </style>
