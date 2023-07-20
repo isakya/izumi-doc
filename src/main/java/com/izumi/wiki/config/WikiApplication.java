@@ -7,13 +7,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 // @ComponentScan({"com.izumi", "com.test"}) // 扫描多个包
 @ComponentScan("com.izumi")
 @SpringBootApplication
 @MapperScan("com.izumi.wiki.mapper")
-@EnableScheduling
+@EnableScheduling // 定时器
+@EnableAsync // 异步化
 public class WikiApplication {
     private static final Logger LOG = LoggerFactory.getLogger(WikiApplication.class);
 
