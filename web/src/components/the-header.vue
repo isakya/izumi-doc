@@ -1,6 +1,6 @@
 <template>
   <a-layout-header class="header">
-    <div class="logo"/>
+    <div class="logo">IZUMI-DOC</div>
     <a-row>
       <a-col :span="20">
         <a-menu
@@ -134,5 +134,13 @@ const logout = () => {
   color: rgba(255, 255, 255, 0.65);
   cursor: pointer;
   transition: color 0.3s;
+}
+
+.logo {
+  width: 130px;
+  height: 31px;
+  float: left;
+  color: white;
+  font-size: 18px;
 }
 </style>
