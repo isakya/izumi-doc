@@ -1,9 +1,12 @@
 package com.izumi.wiki.resp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class StatisticResp {
-
+    // 日期格式化
+    @JsonFormat(pattern = "MM-dd", timezone = "GMT+8")
     private Date date;
 
     private int viewCount;

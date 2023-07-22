@@ -178,3 +178,31 @@ update ebook_snapshot t1 left join (select ebook_id, view_count, vote_count
 set t1.view_increase = (t1.view_count - ifnull(t2.view_count, 0)),
     t1.vote_increase = (t1.vote_count - ifnull(t2.vote_count, 0))
 where t1.`date` = curdate();
+
+
+-- 获取昨天和今天的快照数据
+select
+    t1.`date` as `date`,
+    sum(t1.view_count) as viewCount,
+    sum(t1.vote_count) as voteCount,
+    sum(t1.view_increase) as viewIncrease,
+    sum(t1.vote_increase) as voteIncrease
+from
+    ebook_snapshot t1
+where t1.`date` >= date_sub(curdate(), interval 1 day)
+group by t1.`date`
+order by t1.`date` asc;
+
+-- 30天前到昨天的快照数据 获取 趋势图
+select
+    t1.`date` as `date`,
+    sum(t1.view_increase) as viewIncrease,
+    sum(t1.vote_increase) as voteIncrease
+from
+    ebook_snapshot t1
+where
+    t1.`date` between date_sub(curdate(), interval 30 day) and date_sub(curdate(), interval 1 day)
+group by
+    t1.`date`
+order by
+    t1.`date` asc;
