@@ -24,7 +24,7 @@ public class EbookSnapshotJob {
     /**
      * 每5秒更新
      */
-    @Scheduled(cron = "0/5 * * * * ? ")
+    @Scheduled(cron = "5/30 * * * * ? ")
     public void cron() {
         // 增加日志流水号
         MDC.put("LOG_ID", String.valueOf(snowFlake.nextId()));

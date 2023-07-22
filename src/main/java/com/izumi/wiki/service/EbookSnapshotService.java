@@ -1,9 +1,11 @@
 package com.izumi.wiki.service;
 
 import com.izumi.wiki.mapper.EbookSnapshotMapperCust;
+import com.izumi.wiki.resp.StatisticResp;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class EbookSnapshotService {
@@ -13,5 +15,9 @@ public class EbookSnapshotService {
 
     public void genSnapshot() {
         ebookSnapshotMapperCust.genSnapshot();
+    }
+
+    public List<StatisticResp> getStatistic() {
+        return ebookSnapshotMapperCust.getStatistic();
     }
 }
