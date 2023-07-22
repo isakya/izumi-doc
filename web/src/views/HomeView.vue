@@ -25,18 +25,7 @@
       </a-menu>
     </a-layout-sider>
     <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
-      <div class="welcome" v-show="isShowWelcome">
-        <a-space :size="220">
-          <div>
-            <h1>
-              欢迎使用IZUMI书库
-            </h1>
-            <p>(*￣︶￣)</p>
-          </div>
-
-          <img src="/image/home.jpg" alt="IZUMI">
-        </a-space>
-      </div>
+      <TheWelcome v-show="isShowWelcome"/>
       <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :data-source="ebooks"
               :grid="{gutter: 20, column: 3}">
         <template #renderItem="{ item }">
@@ -78,6 +67,7 @@ import {StarOutlined, MessageOutlined, FileOutlined, UserOutlined, LikeOutlined,
 import {onMounted, ref} from "vue";
 import {message} from 'ant-design-vue'
 import {Tool} from '@/util/tool'
+import TheWelcome from '@/components/the-welcome.vue'
 
 const level1 = ref()
 let categorys: any
@@ -142,18 +132,5 @@ onMounted(() => {
   line-height: 50px;
   border-radius: 8%;
   margin: 5px 0;
-}
-
-.welcome {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.welcome h1,p {
-  font-size: 30px;
-  color: #ebab4b;
-}
-.welcome h1 {
-  font-style: italic;
 }
 </style>
